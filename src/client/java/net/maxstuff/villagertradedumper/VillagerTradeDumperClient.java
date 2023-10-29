@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.village.TradeOfferList;
 import net.minecraft.text.Text;
 import net.minecraft.screen.MerchantScreenHandler;
+import net.minecraft.village.Merchant;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,31 +20,13 @@ public class VillagerTradeDumperClient implements ClientModInitializer {
 		// is opened.
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
 			if (screen instanceof MerchantScreen) {
-				System.out.println("MerchantScreen opened");
+				dumpTrades((MerchantScreen) screen);
 			}
 		});
 		System.out.println("VillagerTradeDumperClient loaded");
 	}
 
 	private static void dumpTrades(MerchantScreen merchantScreen) {
-		// use the mixed in MerchantScreen.getOffers() to get the TradeOfferList
-		MerchantScreenHandler merchantScreenHandler = (MerchantScreenHandler) merchantScreen.getScreenHandler();
-		TradeOfferList tradeOfferList = merchantScreenHandler.getRecipes();
-
-		// list the trades in the console and to C:\tmp\trades.txt
-		System.out.println("Trades:");
-		for (int i = 0; i < tradeOfferList.size(); i++) {
-			System.out.println("Trade " + i + ": " + tradeOfferList.get(i).toString());
-		}
-		try {
-			FileWriter fileWriter = new FileWriter("C:\\tmp\\trades.txt");
-			fileWriter.write("Trades:\n");
-			for (int i = 0; i < tradeOfferList.size(); i++) {
-				fileWriter.write("Trade " + i + ": " + tradeOfferList.get(i).toString() + "\n");
-			}
-			fileWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// TODO
 	}
 }

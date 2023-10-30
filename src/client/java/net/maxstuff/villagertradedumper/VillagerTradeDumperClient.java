@@ -3,13 +3,14 @@ package net.maxstuff.villagertradedumper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.TradeOfferList;
-import net.minecraft.screen.MerchantScreenHandler;
 import net.minecraft.village.Merchant;
 import net.minecraft.village.TradeOffer;
+import net.minecraft.screen.MerchantScreenHandler;
 
-import net.maxstuff.villagertradedumper.mixin.client.MerchantScreenHandlerAccessor;
+import net.maxstuff.villagertradedumper.IMerchantScreenHandler;
 
 public class VillagerTradeDumperClient implements ClientModInitializer {
 	@Override
@@ -24,7 +25,20 @@ public class VillagerTradeDumperClient implements ClientModInitializer {
 
 	private static void dumpTrades(MerchantScreen merchantScreen) {
 		MerchantScreenHandler handler = merchantScreen.getScreenHandler();
-		Merchant merchant = ((MerchantScreenHandlerAccessor) handler).getMerchant();
+		IMerchantScreenHandler iHandler = (IMerchantScreenHandler) handler;
+		Merchant merchant = iHandler.getMerchant();
+
+		// print the merchant's current customer's name
+		PlayerEntity customer = merchant.getCustomer();
+		if (customer != null) {
+			System.out.println("Customer: " + customer.getName().getString());
+		} else {
+			System.out.println("Customer: none");
+		}
+
+		Integer experience = merchant.getExperience();
+		System.out.println("Experience: " + experience);
+
 		TradeOfferList tradeOffers = merchant.getOffers();
 
 		System.out.println("Trade offers:");
